@@ -37,6 +37,18 @@ describe InjestCustomerCsvScenario do
 
   end
 
+  context "customer not in CSV" do
+
+    let(:original_injested_at) { 1.month.ago.change(usec: 0) }
+    let(:customer) { create(:customer, injested_at: original_injested_at) }
+
+    it "does not update injested_at for customer not in file" do
+      subject
+      expect(customer.reload.injested_at).to eq(original_injested_at)
+    end
+
+  end
+
   context "there are errors" do
     let(:csv_path) { File.join(Rails.root, 'spec', 'test_files', 'customer_csv', 'bad.csv') }
 
